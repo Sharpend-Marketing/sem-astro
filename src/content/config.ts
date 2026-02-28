@@ -33,10 +33,10 @@ const caseStudies = defineCollection({
     description: z.string(),
     date: z.string().optional(),
     duration: z.string().optional(),
-    heroImage: z.string(),
+    heroImage: z.string().optional(),
     logo: z.string().optional(),
     gallery: z.array(z.object({
-      src: z.string(),
+      src: z.string().optional(),
       alt: z.string().default(''),
     })).default([]),
     relatedStudies: z.array(z.string()).default([]),

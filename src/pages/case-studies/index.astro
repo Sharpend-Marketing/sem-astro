@@ -3,14 +3,7 @@ import { getCollection } from 'astro:content'
 import SEMLayout from '../../layouts/SEMLayout.astro'
 import SEMCaseStudyCard from '../../components/sem/SEMCaseStudyCard.astro'
 import SEMCTASection from '../../components/sem/SEMCTASection.astro'
-
-function toSlug(id: string) {
-  return id.replace(/\/index\.(mdoc|mdx|md)$/, '').replace(/\.(mdoc|mdx|md)$/, '').replace(/\.md$/, '')
-}
-
-function csImage(filename?: string) {
-  return filename ? `/images/case-studies/${filename}` : undefined
-}
+import { caseStudyImagePath, normalizeCaseStudyData, toCaseStudySlug } from '../../lib/case-studies'
 
 const studies = (await getCollection('case-studies'))
   .filter(s => !s.data.draft)
@@ -42,17 +35,22 @@ const studies = (await getCollection('case-studies'))
     <div class="mx-auto max-w-7xl">
       <div class="flex flex-col gap-10">
         {studies.map(study => (
+          (() => {
+            const data = normalizeCaseStudyData(study.id, study.data)
+            return (
           <SEMCaseStudyCard
-            title={study.data.title}
-            client={study.data.client}
-            category={study.data.category}
-            description={study.data.description}
-            href={`/case-studies/${toSlug(study.id)}`}
-            image={csImage(study.data.heroImage)}
-            logo={csImage(study.data.logo)}
-            date={study.data.date}
-            duration={study.data.duration}
+            title={data.title}
+            client={data.client}
+            category={data.category}
+            description={data.description}
+            href={`/case-studies/${toCaseStudySlug(study.id)}`}
+            image={caseStudyImagePath(data.heroImage)!}
+            logo={caseStudyImagePath(data.logo)}
+            date={data.date}
+            duration={data.duration}
           />
+            )
+          })()
         ))}
       </div>
     </div>

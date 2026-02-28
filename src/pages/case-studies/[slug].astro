@@ -2,31 +2,25 @@
 import { getCollection } from 'astro:content'
 import SEMLayout from '../../layouts/SEMLayout.astro'
 import SEMCTASection from '../../components/sem/SEMCTASection.astro'
-
-function toSlug(id: string) {
-  return id.replace(/\/index\.(mdoc|mdx|md)$/, '').replace(/\.(mdoc|mdx|md)$/, '').replace(/\.md$/, '')
-}
-
-function csImage(filename?: string) {
-  return filename ? `/images/case-studies/${filename}` : undefined
-}
+import { caseStudyImagePath, normalizeCaseStudyData, toCaseStudySlug } from '../../lib/case-studies'
 
 export async function getStaticPaths() {
   const studies = await getCollection('case-studies')
   return studies.map(study => ({
-    params: { slug: study.id.replace(/\/index\.(mdoc|mdx|md)$/, '').replace(/\.(mdoc|mdx|md)$/, '').replace(/\.md$/, '') },
+    params: { slug: toCaseStudySlug(study.id) },
     props: { study },
   }))
 }
 
 const { study } = Astro.props
 const { Content } = await study.render()
-const { title, client, category, description, date, duration, heroImage, logo, gallery, relatedStudies } = study.data
+const normalizedStudy = normalizeCaseStudyData(study.id, study.data)
+const { title, client, category, description, date, duration, heroImage, logo, gallery, relatedStudies } = normalizedStudy
 
 // Fetch related case studies
 const allStudies = await getCollection('case-studies')
 const related = relatedStudies
-  .map(slug => allStudies.find(s => toSlug(s.id) === slug))
+  .map(slug => allStudies.find(s => toCaseStudySlug(s.id) === slug))
   .filter(Boolean)
 ---
 
@@ -39,7 +33,7 @@ const related = relatedStudies
     <!-- Hero Image -->
     <div class="relative h-[50vh] min-h-[400px] w-full overflow-hidden">
       <img
-        src={csImage(heroImage)}
+        src={caseStudyImagePath(heroImage)}
         alt={title}
         class="h-full w-full object-cover"
         loading="eager"
@@ -106,7 +100,7 @@ const related = relatedStudies
           {gallery.map(img => (
             <div class="overflow-hidden rounded-xl">
               <img
-                src={csImage(img.src)}
+                src={caseStudyImagePath(img.src)}
                 alt={img.alt}
                 class="h-64 w-full object-cover transition-transform duration-500 hover:scale-105"
                 loading="lazy"
@@ -135,19 +129,19 @@ const related = relatedStudies
         <div class="grid gap-8 md:grid-cols-2">
           {related.map(r => (
             <a
-              href={`/case-studies/${toSlug(r!.id)}`}
+              href={`/case-studies/${toCaseStudySlug(r!.id)}`}
               class="group relative flex overflow-hidden rounded-2xl bg-white shadow-card transition-all duration-300 hover:shadow-card-hover"
             >
               <div class="relative h-48 w-48 flex-shrink-0 overflow-hidden">
                 <img
-                  src={csImage(r!.data.heroImage)}
+                  src={caseStudyImagePath(normalizeCaseStudyData(r!.id, r!.data).heroImage)}
                   alt={r!.data.title}
                   class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
                 />
                 {r!.data.logo && (
                   <div class="absolute inset-0 flex items-center justify-center bg-teal-dark/80 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <img src={csImage(r!.data.logo)} alt={r!.data.client} class="h-14 w-auto max-w-[70%] object-contain brightness-0 invert" loading="lazy" />
+                    <img src={caseStudyImagePath(normalizeCaseStudyData(r!.id, r!.data).logo)} alt={r!.data.client} class="h-14 w-auto max-w-[70%] object-contain brightness-0 invert" loading="lazy" />
                   </div>
                 )}
               </div>

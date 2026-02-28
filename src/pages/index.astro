@@ -8,6 +8,7 @@ import SEMProcessStep from '../components/sem/SEMProcessStep.astro'
 import SEMCaseStudyCard from '../components/sem/SEMCaseStudyCard.astro'
 import SEMBlogCard from '../components/sem/SEMBlogCard.astro'
 import SEMCTASection from '../components/sem/SEMCTASection.astro'
+import { caseStudyImagePath, normalizeCaseStudyData, toCaseStudySlug } from '../lib/case-studies'
 
 const services = [
   { number: '01', title: 'Digital Marketing', description: "A catch-all phrase, let's talk about specific tools to reach your goals.", href: '/services/digital-marketing' },
@@ -30,13 +31,10 @@ const caseStudies = (await getCollection('case-studies'))
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 3)
   .map(s => ({
-    title: s.data.title,
-    client: s.data.client,
-    category: s.data.category,
-    description: s.data.description,
-    href: `/case-studies/${toSlug(s.id)}`,
-    image: s.data.heroImage ? `/images/case-studies/${s.data.heroImage}` : undefined,
-    logo: s.data.logo ? `/images/case-studies/${s.data.logo}` : undefined,
+    ...normalizeCaseStudyData(s.id, s.data),
+    href: `/case-studies/${toCaseStudySlug(s.id)}`,
+    image: caseStudyImagePath(normalizeCaseStudyData(s.id, s.data).heroImage),
+    logo: caseStudyImagePath(normalizeCaseStudyData(s.id, s.data).logo),
   }))
 
 function toSlug(id: string) {
