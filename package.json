@@ -22,6 +22,7 @@
     "astro": "^5",
     "react": "^19",
     "react-dom": "^19",
+    "resend": "^6.12.4",
     "sharp": "^0.34",
     "tailwindcss": "^4",
     "typescript": "^5"

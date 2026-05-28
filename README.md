@@ -98,6 +98,12 @@ Production Keystatic GitHub mode requires:
 - `KEYSTATIC_SECRET`
 - `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`
 
+Contact form email delivery requires:
+
+- `RESEND_API_KEY`
+- `CONTACT_FORM_FROM` - verified Resend sender, for example `Sharp End Marketing <forms@yourdomain.com>`
+- `CONTACT_FORM_TO` - recipient inbox for submissions; comma-separate multiple recipients
+
 Reference template: `.env.example`
 
 Do not commit `.env`.

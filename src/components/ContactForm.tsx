@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type CSSProperties } from 'react'
 
 interface FormData {
   readonly name: string
@@ -6,12 +6,14 @@ interface FormData {
   readonly phone: string
   readonly message: string
   readonly requestAudit: boolean
+  readonly website: string
 }
 
 interface FormErrors {
   readonly name?: string
   readonly email?: string
   readonly message?: string
+  readonly submit?: string
 }
 
 const initialFormData: FormData = {
@@ -20,6 +22,7 @@ const initialFormData: FormData = {
   phone: '',
   message: '',
   requestAudit: true,
+  website: '',
 }
 
 function validateForm(data: FormData): FormErrors {
@@ -46,6 +49,7 @@ export default function ContactForm() {
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [errors, setErrors] = useState<FormErrors>({})
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const updateField = (field: keyof FormData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -57,7 +61,7 @@ export default function ContactForm() {
     }
   }
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
     const validationErrors = validateForm(formData)
 
@@ -69,7 +73,33 @@ export default function ContactForm() {
       return
     }
 
-    setSubmitted(true)
+    setErrors({})
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+      const result = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        setErrors({
+          ...(result.errors ?? {}),
+          submit: result.message ?? 'We could not send your message right now.',
+        })
+        return
+      }
+
+      setSubmitted(true)
+    } catch {
+      setErrors({ submit: 'We could not send your message right now. Please try again.' })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (submitted) {
@@ -95,6 +125,20 @@ export default function ContactForm() {
     <form onSubmit={handleSubmit} noValidate>
       <div className="space-y-6">
         <div>
+          <label htmlFor="contact-website" className="sr-only">
+            Website
+          </label>
+          <input
+            id="contact-website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={formData.website}
+            onChange={e => updateField('website', e.target.value)}
+            className="hidden"
+            aria-hidden="true"
+          />
+
           <label htmlFor="contact-name" className="block font-body text-sm font-medium" style={{ color: '#0A0D14' }}>
             Name
           </label>
@@ -108,7 +152,7 @@ export default function ContactForm() {
             aria-invalid={errors.name ? 'true' : undefined}
             aria-describedby={errors.name ? 'contact-name-error' : undefined}
             className={inputClasses}
-            style={{ ...inputStyle, '--tw-ring-color': 'rgba(8, 109, 114, 0.2)' } as React.CSSProperties}
+            style={{ ...inputStyle, '--tw-ring-color': 'rgba(8, 109, 114, 0.2)' } as CSSProperties}
           />
           {errors.name && (
             <p id="contact-name-error" className="mt-1 font-body text-sm text-danger" role="alert">
@@ -193,15 +237,23 @@ export default function ContactForm() {
 
         <button
           type="submit"
+          disabled={isSubmitting}
           className="w-full font-body text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
           style={{
-            backgroundColor: 'rgba(8, 109, 114, 0.82)',
+            backgroundColor: isSubmitting ? 'rgba(8, 109, 114, 0.56)' : 'rgba(8, 109, 114, 0.82)',
             padding: '0.75rem 1.5rem',
             borderRadius: '0px 7px',
+            cursor: isSubmitting ? 'wait' : 'pointer',
           }}
         >
-          Send Message
+          {isSubmitting ? 'Sending...' : 'Send Message'}
         </button>
+
+        {errors.submit && (
+          <p className="font-body text-sm text-danger" role="alert">
+            {errors.submit}
+          </p>
+        )}
       </div>
     </form>
   )
