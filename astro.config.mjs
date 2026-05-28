@@ -9,23 +9,27 @@ import vercel from '@astrojs/vercel';
 
 // Keystatic integration: Vite config + route injection
 // Routes use prerender: false → deployed as Vercel Serverless Functions
+/** @returns {import('astro').AstroIntegration} */
 function keystatic() {
   return {
     name: 'keystatic',
     hooks: {
       'astro:config:setup': ({ injectRoute, updateConfig, config }) => {
+        const keystaticConfigPlugin = {
+          name: 'keystatic',
+          /** @param {string} id */
+          resolveId(id) {
+            if (id === 'virtual:keystatic-config') {
+              return new URL('./keystatic.config.ts', import.meta.url).pathname;
+            }
+            return null;
+          },
+        };
+
         updateConfig({
           server: config.server.host ? {} : { host: '127.0.0.1' },
           vite: {
-            plugins: [{
-              name: 'keystatic',
-              resolveId(id) {
-                if (id === 'virtual:keystatic-config') {
-                  return this.resolve('./keystatic.config', './a');
-                }
-                return null;
-              },
-            }],
+            plugins: [keystaticConfigPlugin],
             optimizeDeps: {
               entries: ['keystatic.config.*'],
             },

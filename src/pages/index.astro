@@ -30,12 +30,15 @@ const caseStudies = (await getCollection('case-studies'))
   .filter(s => !s.data.draft)
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 3)
-  .map(s => ({
-    ...normalizeCaseStudyData(s.id, s.data),
-    href: `/case-studies/${toCaseStudySlug(s.id)}`,
-    image: caseStudyImagePath(normalizeCaseStudyData(s.id, s.data).heroImage),
-    logo: caseStudyImagePath(normalizeCaseStudyData(s.id, s.data).logo),
-  }))
+  .map(s => {
+    const data = normalizeCaseStudyData(s.id, s.data)
+    return {
+      ...data,
+      href: `/case-studies/${toCaseStudySlug(s.id)}`,
+      image: caseStudyImagePath(data.heroImage)!,
+      logo: caseStudyImagePath(data.logo),
+    }
+  })
 
 function toSlug(id: string) {
   return id.replace(/\/index\.(mdoc|mdx|md)$/, '').replace(/\.(mdoc|mdx|md)$/, '')

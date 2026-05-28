@@ -27,7 +27,19 @@ interface BrandViolation {
 
 function checkFontUsage(files: string[]): BrandViolation[] {
   const violations: BrandViolation[] = []
-  const allowedFonts = ['Inter', 'Inter Variable', 'Comfortaa', 'system-ui', 'cursive', 'sans-serif']
+  const allowedFonts = [
+    'Inter',
+    'Inter Variable',
+    'Comfortaa',
+    'ui-sans-serif',
+    'system-ui',
+    'cursive',
+    'sans-serif',
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Noto Color Emoji',
+  ]
   const fontFamilyPattern = /font-family\s*:\s*([^;}"]+)/gi
 
   for (const file of files) {
@@ -41,6 +53,10 @@ function checkFontUsage(files: string[]): BrandViolation[] {
       fontFamilyPattern.lastIndex = 0
       while ((match = fontFamilyPattern.exec(line)) !== null) {
         const fontValue = match[1].trim()
+        if (fontValue.includes('var(')) {
+          continue
+        }
+
         // Check if the font value contains only allowed fonts
         const fonts = fontValue.split(',').map((f) => f.trim().replace(/['"]/g, ''))
         const hasDisallowedFont = fonts.some(

@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
+import { Image } from 'astro:assets'
 import SEMLayout from '../../layouts/SEMLayout.astro'
 import SEMCTASection from '../../components/sem/SEMCTASection.astro'
 import { caseStudyImagePath, normalizeCaseStudyData, toCaseStudySlug } from '../../lib/case-studies'
@@ -15,13 +16,13 @@ export async function getStaticPaths() {
 const { study } = Astro.props
 const { Content } = await study.render()
 const normalizedStudy = normalizeCaseStudyData(study.id, study.data)
-const { title, client, category, description, date, duration, heroImage, logo, gallery, relatedStudies } = normalizedStudy
+const { title, client, category, description, date, duration, heroImage, gallery = [], relatedStudies = [] } = normalizedStudy
 
 // Fetch related case studies
 const allStudies = await getCollection('case-studies')
 const related = relatedStudies
   .map(slug => allStudies.find(s => toCaseStudySlug(s.id) === slug))
-  .filter(Boolean)
+  .filter(study => study !== undefined)
 ---
 
 <SEMLayout
@@ -127,36 +128,39 @@ const related = relatedStudies
           <p class="mt-4 text-body-lg text-text-body">See how we've transformed brands and driven results.</p>
         </div>
         <div class="grid gap-8 md:grid-cols-2">
-          {related.map(r => (
-            <a
-              href={`/case-studies/${toCaseStudySlug(r!.id)}`}
-              class="group relative flex overflow-hidden rounded-2xl bg-white shadow-card transition-all duration-300 hover:shadow-card-hover"
-            >
-              <div class="relative h-48 w-48 flex-shrink-0 overflow-hidden">
-                <img
-                  src={caseStudyImagePath(normalizeCaseStudyData(r!.id, r!.data).heroImage)}
-                  alt={r!.data.title}
-                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                />
-                {r!.data.logo && (
-                  <div class="absolute inset-0 flex items-center justify-center bg-teal-dark/80 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <img src={caseStudyImagePath(normalizeCaseStudyData(r!.id, r!.data).logo)} alt={r!.data.client} class="h-14 w-auto max-w-[70%] object-contain brightness-0 invert" loading="lazy" />
-                  </div>
-                )}
-              </div>
-              <div class="flex flex-1 flex-col justify-center p-6">
-                <h3 class="font-accent text-h4 font-medium text-heading transition-colors group-hover:text-teal-solid">{r!.data.title}</h3>
-                <p class="mt-2 text-sm leading-relaxed text-text-body line-clamp-2">{r!.data.description}</p>
-                <div class="mt-3 flex items-center gap-1 text-sm font-medium text-teal-solid">
-                  View Case Study
-                  <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
-                  </svg>
+          {related.map(r => {
+            const data = normalizeCaseStudyData(r.id, r.data)
+            return (
+              <a
+                href={`/case-studies/${toCaseStudySlug(r.id)}`}
+                class="group relative flex overflow-hidden rounded-2xl bg-white shadow-card transition-all duration-300 hover:shadow-card-hover"
+              >
+                <div class="relative h-48 w-48 flex-shrink-0 overflow-hidden">
+                  <img
+                    src={caseStudyImagePath(data.heroImage)}
+                    alt={data.title}
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  {data.logo && (
+                    <div class="absolute inset-0 flex items-center justify-center bg-teal-dark/80 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <Image src={caseStudyImagePath(data.logo)!} alt={data.client} width={320} height={160} class="h-14 w-auto max-w-[70%] object-contain brightness-0 invert" loading="lazy" />
+                    </div>
+                  )}
                 </div>
-              </div>
-            </a>
-          ))}
+                <div class="flex flex-1 flex-col justify-center p-6">
+                  <h3 class="font-accent text-h4 font-medium text-heading transition-colors group-hover:text-teal-solid">{data.title}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-text-body line-clamp-2">{data.description}</p>
+                  <div class="mt-3 flex items-center gap-1 text-sm font-medium text-teal-solid">
+                    View Case Study
+                    <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
+                    </svg>
+                  </div>
+                </div>
+              </a>
+            )
+          })}
         </div>
       </div>
     </section>

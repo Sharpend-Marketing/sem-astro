@@ -42,7 +42,7 @@
   - `src/keystatic/api.ts` — API handler via `makeHandler` (SSR)
   - `src/components/KeystaticApp.tsx` — React wrapper for Keystatic UI
 - **Image fields**: Store filenames only (e.g., `workflow-optimization.avif`), rendering code prepends public path
-- **Collection path format**: Must end with `*/` for directory entries (`slug/index.mdoc`)
+- **Collection path format**: Must end with `*/` for directory entries, such as each slug folder containing an `index.mdoc` file
 
 ### Deployment
 

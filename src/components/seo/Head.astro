@@ -1,5 +1,5 @@
 ---
-import { generateMeta } from '../../lib/seo'
+import { generateJsonLd, generateMeta } from '../../lib/seo'
 
 interface Props {
   title: string
@@ -40,6 +40,25 @@ const metaTags = generateMeta({
 })
 
 const canonicalUrl = canonical ?? url
+const titleWithBrand = `${title} | Sharp End Marketing`
+const pageTitle = titleWithBrand.length <= 70 ? titleWithBrand : title
+const structuredData = type === 'article' && publishedAt && author
+  ? generateJsonLd({
+      type: 'Article',
+      headline: title,
+      description,
+      url: canonicalUrl,
+      author,
+      publishedAt,
+      updatedAt,
+      image: ogImage,
+    })
+  : generateJsonLd({
+      type: 'WebPage',
+      name: title,
+      description,
+      url: canonicalUrl,
+    })
 ---
 
 <meta charset="utf-8" />
@@ -48,10 +67,11 @@ const canonicalUrl = canonical ?? url
 <link rel="icon" href="/favicon.ico" />
 <link rel="canonical" href={canonicalUrl} />
 <meta name="generator" content={Astro.generator} />
-<title>{title} | Sharp End Marketing</title>
+<title>{pageTitle}</title>
 {metaTags.map(tag => (
   tag.property
     ? <meta property={tag.property} content={tag.content} />
     : <meta name={tag.name} content={tag.content} />
 ))}
+<script is:inline type="application/ld+json" set:html={structuredData} />
 <slot />

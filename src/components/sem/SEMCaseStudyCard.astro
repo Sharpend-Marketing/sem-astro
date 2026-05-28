@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets'
+
 interface Props {
   title: string
   client: string
@@ -29,7 +31,7 @@ const { title, client, category, description, href, image, logo, date, duration 
       />
       {logo && (
         <div class="absolute inset-0 flex items-center justify-center bg-teal-dark/80 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <img src={logo} alt={client} class="h-16 w-auto max-w-[70%] object-contain brightness-0 invert" loading="lazy" />
+          <Image src={logo} alt={client} width={320} height={160} class="h-16 w-auto max-w-[70%] object-contain brightness-0 invert" loading="lazy" />
         </div>
       )}
     </div>
