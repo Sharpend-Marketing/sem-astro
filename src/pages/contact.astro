@@ -1,6 +1,7 @@
 ---
 import SEMLayout from '../layouts/SEMLayout.astro'
 import ContactForm from '../components/ContactForm.tsx'
+import { contactFormConfig } from '../lib/form-configs'
 ---
 
 <SEMLayout
@@ -16,7 +17,7 @@ import ContactForm from '../components/ContactForm.tsx'
         </p>
       </div>
       <div class="mt-12 rounded-xl border border-border bg-white p-8 shadow-card">
-        <ContactForm client:visible />
+        <ContactForm {...contactFormConfig} sourcePage={Astro.url.pathname} client:visible />
       </div>
     </div>
   </section>
