@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css'
 import Head from '../components/seo/Head.astro'
+import GoogleAnalytics from '../components/analytics/GoogleAnalytics.astro'
 import Analytics from '@vercel/analytics/astro'
 
 interface Props {
@@ -44,6 +45,7 @@ const {
     >
       <slot name="head" />
     </Head>
+    <GoogleAnalytics />
   </head>
   <body class="antialiased">
     <slot />

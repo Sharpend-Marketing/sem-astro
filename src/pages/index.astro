@@ -78,12 +78,20 @@ const blogPosts = (await getCollection('blog', ({ data }) => !data.draft))
     title="Focus on your business, leave the marketing to us"
     highlight="marketing"
   >
-    <div slot="image" class="relative h-[400px] md:h-[500px] w-full overflow-hidden">
-      <img
-        src="/images/hero/hero-v3.jpg"
-        alt="Sharp End Marketing - creative storytelling"
+    <div slot="image" class="hero-animation relative h-[400px] w-full overflow-hidden md:h-[500px]">
+      <video
         class="absolute inset-0 h-full w-full object-cover"
-      />
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster="/videos/sharp-end-logo-transition-poster.jpg"
+        aria-hidden="true"
+      >
+        <source src="/videos/sharp-end-logo-transition.webm" type="video/webm" />
+        <source src="/videos/sharp-end-logo-transition.mp4" type="video/mp4" />
+      </video>
       <div class="absolute inset-0 bg-black/20" />
     </div>
   </SEMHero>
@@ -204,3 +212,15 @@ const blogPosts = (await getCollection('blog', ({ data }) => !data.draft))
     ctaHref="/contact"
   />
 </SEMLayout>
+
+<style>
+  .hero-animation {
+    background: url('/videos/sharp-end-logo-transition-poster.jpg') center / cover no-repeat;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-animation video {
+      display: none;
+    }
+  }
+</style>

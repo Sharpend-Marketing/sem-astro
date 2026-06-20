@@ -1,0 +1,17 @@
+---
+const measurementId = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID
+const isValidMeasurementId = /^G-[A-Z0-9]+$/.test(measurementId ?? '')
+---
+
+{isValidMeasurementId && (
+  <>
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}></script>
+    <script is:inline define:vars={{ measurementId }}>
+      window.dataLayer = window.dataLayer || []
+      function gtag(){dataLayer.push(arguments)}
+      gtag('js', new Date())
+      gtag('config', measurementId)
+    </script>
+  </>
+)}

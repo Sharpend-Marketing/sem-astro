@@ -9,12 +9,20 @@ const qualifyingQuestions = [
   { question: 'Do you have excess capacity within your business?', answer: "Most clients are looking for leads, sales or similar. We want to make sure you can handle the influx of inquiries." },
   { question: 'How motivated are you to fill it?', answer: "We're pretty good at figuring out if you are or aren't. We're not looking to convince anyone marketing is a good idea, there are enough people out there that know." },
   { question: 'Are you/your team committed to being a part of the process?', answer: "We understand you're busy but you are often the key to success. So we'll schedule photo/video shoots, interviews, etc around your schedule. We need quality content to do quality marketing." },
-  { question: 'Long-term Relationships', answer: "We do take on smaller jobs when it works for us, but our priority is to work with clients who see value in marketing and require ongoing services." },
+  { question: "We're looking for long-term relationships.", answer: "We do take on smaller jobs when it works for us, but our priority is to work with clients who see value in marketing and require ongoing services." },
 ]
 
 const team = [
-  { name: 'Chris Ricard', role: 'Serial Entrepreneur, Always Marketing Strategy First!' },
-  { name: 'Larry Toube', role: 'Design Thinking, Crafting Ideas into Impactful Realities' },
+  {
+    name: 'Chris Ricard',
+    role: 'Serial Entrepreneur, Always Marketing Strategy First!',
+    bio: 'Chris brings experience building and operating ventures across web design, hosting, publishing, training, and entertainment. He has taught marketing at Douglas College since 2018 and pairs practical business experience with strategy-first thinking.',
+  },
+  {
+    name: 'Larry Toube',
+    role: 'Design Thinking, Crafting Ideas into Impactful Realities',
+    bio: 'Larry brings more than 20 years of experience shaping web, mobile, and social experiences. He combines creative direction, technology, and hands-on collaboration to build user-focused work that engages audiences and drives meaningful results.',
+  },
 ]
 ---
 
@@ -27,6 +35,8 @@ const team = [
     label="About Us"
     title="Less really is more"
     subtitle="We turn complexity into clarity, strategy into success."
+    ctaText="Start a Conversation"
+    ctaHref="/contact"
   />
 
   <!-- About -->
@@ -58,26 +68,33 @@ const team = [
     <div class="mx-auto max-w-4xl">
       <h2 class="font-accent text-h2 font-medium text-heading text-center">Why Sharp End Marketing?</h2>
       <p class="mt-6 text-body-lg leading-relaxed text-text-body">
-        We are your outsourced marketing department. If you do all the calculations, it's probably cheaper to contract out to us than have a part-time or full-time in-house employee.
+        We are your outsourced marketing department. You get a broader mix of strategy, creative, and execution experience than one part-time or full-time role can usually provide.
       </p>
       <p class="mt-4 text-body-lg leading-relaxed text-text-body">
-        Content is KING. If you develop the right content that is relevant, engaging and dare we say entertaining to your prospective and existing customers, your company will reap rewards for a long time to come.
+        We have the skills and experience to build and execute a solid plan. We want you to invest in your business and grow brand equity—not simply feed advertising platforms. Advertising has a role, but relevant, engaging, and entertaining content keeps working long after a campaign ends.
+      </p>
+      <p class="mt-4 text-body-lg leading-relaxed text-text-body">
+        Explore our <a href="/services" class="font-medium text-teal-solid hover:underline">marketing services</a> or read the thinking behind our approach in the <a href="/blog" class="font-medium text-teal-solid hover:underline">Sharp End blog</a>.
       </p>
     </div>
   </section>
 
   <!-- Team -->
-  <section class="bg-bg-light px-6 py-20">
+  <section id="team" class="scroll-mt-24 bg-bg-light px-6 py-20">
     <div class="mx-auto max-w-7xl">
-      <SEMSectionHeader label="The Team" title="Meet the Team" />
-      <div class="mt-12 grid gap-8 md:grid-cols-2 max-w-2xl mx-auto">
+      <SEMSectionHeader label="Our Team" title="The Folks Behind the Brand" subtitle="Behind every successful project at Sharp End is a team bringing practical experience, creative thinking, and distinct perspectives to the table." />
+      <div class="mt-12 grid gap-8 md:grid-cols-2 max-w-4xl mx-auto">
         {team.map(member => (
           <SEMTeamCard {...member} />
         ))}
       </div>
-      <p class="mt-8 text-center text-sm text-text-body/70">
-        Our offices are located deep in the forested mountains on Vancouver's North Shore where we constantly find inspiration while at play.
-      </p>
+      <div class="mx-auto mt-12 max-w-3xl text-center">
+        <p class="section-label">Our Office</p>
+        <h2 class="mt-4 font-accent text-h3 font-medium text-heading">Where Marketing Ideas Come to Life</h2>
+        <p class="mt-4 text-body-lg text-text-body">
+          Our offices are located deep in the forested mountains on Vancouver's North Shore, where time outdoors keeps us curious and constantly finding inspiration.
+        </p>
+      </div>
     </div>
   </section>
 

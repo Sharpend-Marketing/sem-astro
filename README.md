@@ -104,6 +104,12 @@ Contact form email delivery requires:
 - `CONTACT_FORM_FROM` - verified Resend sender, for example `Sharp End Marketing <larry@sharpendmarketing.com>`
 - `CONTACT_FORM_TO` - recipient inbox for submissions; comma-separate multiple recipients
 
+Analytics requires:
+
+- `PUBLIC_GOOGLE_ANALYTICS_ID` - GA4 measurement ID; the migrated production property is `G-R4BPKW2Y4Q`
+
+The site runs both GA4 and Vercel Analytics. The legacy Webflow site also contains a GTM noscript reference, but no matching GTM loader; do not add the GTM container alongside GA4 unless its tags are audited to prevent duplicate page views.
+
 ### Resend Contact Form Setup
 
 1. In Resend, verify `sharpendmarketing.com` and wait for DNS status to pass.
