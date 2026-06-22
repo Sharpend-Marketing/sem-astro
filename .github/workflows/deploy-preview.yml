@@ -3,6 +3,15 @@ name: Deploy Preview Checks
 on:
   deployment_status:
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: preview-${{ github.event.deployment.sha }}
+  cancel-in-progress: true
+
 jobs:
   preview-checks:
     runs-on: ubuntu-latest
@@ -45,8 +54,10 @@ jobs:
           uploadArtifacts: true
 
       - name: Run axe-core accessibility scan
+        id: axe
+        continue-on-error: true
         run: |
-          npx @axe-core/cli "${{ steps.preview.outputs.url }}" --exit --tags wcag2a,wcag2aa --stdout > axe-results.json 2>&1 || true
+          npx @axe-core/cli "${{ steps.preview.outputs.url }}" --exit --tags wcag2a,wcag2aa --stdout > axe-results.json
 
       - name: Post results as PR comment
         if: github.event.deployment_status.environment == 'Preview'
@@ -92,3 +103,9 @@ jobs:
                 body,
               });
             }
+
+      - name: Enforce accessibility result
+        if: steps.axe.outcome == 'failure'
+        run: |
+          echo "axe-core found accessibility violations or could not complete."
+          exit 1
