@@ -98,6 +98,50 @@ Production Keystatic GitHub mode requires:
 - `KEYSTATIC_SECRET`
 - `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`
 
+Contact form email delivery requires:
+
+- `RESEND_API_KEY`
+- `CONTACT_FORM_FROM` - verified Resend sender, for example `Sharp End Marketing <larry@sharpendmarketing.com>`
+- `CONTACT_FORM_TO` - recipient inbox for submissions; comma-separate multiple recipients
+
+Analytics requires:
+
+- `PUBLIC_GOOGLE_ANALYTICS_ID` - GA4 measurement ID; the migrated production property is `G-R4BPKW2Y4Q`
+
+The site runs both GA4 and Vercel Analytics. The legacy Webflow site also contains a GTM noscript reference, but no matching GTM loader; do not add the GTM container alongside GA4 unless its tags are audited to prevent duplicate page views.
+
+### Resend Contact Form Setup
+
+1. In Resend, verify `sharpendmarketing.com` and wait for DNS status to pass.
+2. Create a restricted API key with email sending permission.
+3. Set the local `.env` values:
+
+```sh
+RESEND_API_KEY=re_...
+CONTACT_FORM_FROM="Sharp End Marketing <larry@sharpendmarketing.com>"
+CONTACT_FORM_TO=larry@sharpendmarketing.com
+```
+
+4. Add the same variables to the Vercel project for Production, Preview, and Development.
+5. Submit the `/contact` form after deploy and confirm the message arrives in `CONTACT_FORM_TO`.
+
+The API key may be send-only. In that case, Resend domain-list API checks return `restricted_api_key`, which is expected and does not block contact form delivery.
+
+### Configurable Forms
+
+Reusable form variants live in `src/lib/form-configs.ts`. Pages import a config and pass it to the React form island:
+
+```astro
+---
+import ContactForm from '../components/ContactForm.tsx'
+import { serviceInquiryFormConfig } from '../lib/form-configs'
+---
+
+<ContactForm {...serviceInquiryFormConfig} sourcePage={Astro.url.pathname} client:visible />
+```
+
+Keep recipients in server environment variables rather than page props. Form configs may customize labels, success copy, audit defaults, and optional extra fields.
+
 Reference template: `.env.example`
 
 Do not commit `.env`.

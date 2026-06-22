@@ -1,20 +1,40 @@
 ---
+import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
+
 interface Props {
   name: string
   role: string
   bio?: string
+  image: ImageMetadata
+  href: string
 }
 
-const { name, role, bio } = Astro.props
+const { name, role, bio, image, href } = Astro.props
 ---
 
-<div class="rounded-xl border border-border bg-white p-6 text-center">
-  <div class="mx-auto h-24 w-24 rounded-full bg-bg-light flex items-center justify-center">
-    <span class="font-accent text-2xl text-text-muted">
-      {name.split(' ').map(n => n[0]).join('')}
-    </span>
+<article class="group overflow-hidden rounded-xl border border-border bg-white text-center transition-shadow hover:shadow-card-hover">
+  <div class="aspect-[4/5] overflow-hidden bg-bg-light">
+    <Image
+      src={image}
+      alt={`${name}, Sharp End Marketing`}
+      class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+      widths={[480, 720]}
+      sizes="(min-width: 768px) 384px, calc(100vw - 48px)"
+      loading="lazy"
+    />
   </div>
-  <h3 class="mt-4 font-accent text-h4 font-medium text-heading">{name}</h3>
-  <p class="mt-1 text-sm font-medium text-teal-solid">{role}</p>
-  {bio && <p class="mt-3 text-sm leading-relaxed text-text-body">{bio}</p>}
-</div>
+  <div class="p-6">
+    <h3 class="font-accent text-h4 font-medium text-heading">
+      <a href={href} class="rounded-sm transition-colors hover:text-teal-solid focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-solid">{name}</a>
+    </h3>
+    <p class="mt-1 text-sm font-medium text-teal-solid">{role}</p>
+    {bio && <p class="mt-3 text-sm leading-relaxed text-text-body">{bio}</p>}
+    <a href={href} class="mt-5 inline-flex items-center gap-2 rounded-sm text-sm font-medium text-teal-solid hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-solid">
+      View profile
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+      </svg>
+    </a>
+  </div>
+</article>

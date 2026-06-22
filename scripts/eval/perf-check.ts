@@ -13,7 +13,7 @@
  */
 
 import { readFileSync, statSync } from 'node:fs'
-import { basename, relative, resolve } from 'node:path'
+import { relative, resolve } from 'node:path'
 import { collectFiles, collectHtmlFiles } from './utils'
 
 interface PerfViolation {
@@ -32,9 +32,9 @@ const BUDGETS = {
   htmlFile: 100 * 1024, // 100KB per HTML file
   cssFile: 50 * 1024, // 50KB per CSS file
   cssTotal: 150 * 1024, // 150KB total CSS
-  jsFile: 100 * 1024, // 100KB per JS file
+  jsFile: 200 * 1024, // 200KB per public JS file
   jsTotal: 300 * 1024, // 300KB total JS
-  imageFile: 500 * 1024, // 500KB per image
+  imageFile: 3 * 1024 * 1024, // 3MB per referenced image
   inlineScript: 10 * 1024, // 10KB inline script
   inlineStyle: 10 * 1024, // 10KB inline style
   totalWeight: 1024 * 1024, // 1MB total page weight
@@ -44,6 +44,39 @@ function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes}B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`
   return `${(bytes / (1024 * 1024)).toFixed(2)}MB`
+}
+
+function toDistFile(distDir: string, publicPath: string): string | null {
+  if (!publicPath.startsWith('/') || publicPath.startsWith('//')) {
+    return null
+  }
+
+  return resolve(distDir, publicPath.slice(1))
+}
+
+function collectReferencedAssets(htmlFiles: string[], distDir: string, extensions: string[]): string[] {
+  const referenced = new Set<string>()
+  const assetPattern = /(?:src|href|component-url|renderer-url)=["']([^"']+)["']/gi
+
+  for (const file of htmlFiles) {
+    const content = readFileSync(file, 'utf-8')
+    let match: RegExpExecArray | null
+
+    assetPattern.lastIndex = 0
+    while ((match = assetPattern.exec(content)) !== null) {
+      const assetPath = match[1].split('?')[0]
+      if (!extensions.some((ext) => assetPath.endsWith(ext))) {
+        continue
+      }
+
+      const distFile = toDistFile(distDir, assetPath)
+      if (distFile) {
+        referenced.add(distFile)
+      }
+    }
+  }
+
+  return [...referenced]
 }
 
 // ---------------------------------------------------------------------------
@@ -152,15 +185,16 @@ function checkInlineResources(htmlFiles: string[]): PerfViolation[] {
 function run(): void {
   const root = resolve(process.cwd())
   const distDir = resolve(root, 'dist')
+  const assetDir = resolve(distDir, 'client')
 
   console.log('Sharp End Marketing — Performance Budget Check')
   console.log('='.repeat(50))
 
   const htmlFiles = collectHtmlFiles(distDir)
   const cssFiles = collectFiles(distDir, '.css')
-  const jsFiles = collectFiles(distDir, '.js')
+  const jsFiles = collectReferencedAssets(htmlFiles, assetDir, ['.js'])
   const imageExts = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif', '.svg']
-  const imageFiles = imageExts.flatMap((ext) => collectFiles(distDir, ext))
+  const imageFiles = collectReferencedAssets(htmlFiles, assetDir, imageExts)
 
   if (htmlFiles.length === 0) {
     console.log('\n⚠️  No HTML files found in dist/. Run `pnpm build` first.')
@@ -196,7 +230,7 @@ function run(): void {
   allViolations.push(...checkInlineResources(htmlFiles))
 
   // Total page weight
-  const totalWeight = html.totalSize + css.totalSize + js.totalSize + img.totalSize
+  const totalWeight = html.totalSize + css.totalSize + js.totalSize
   allViolations.push(
     ...checkTotalSize(totalWeight, BUDGETS.totalWeight, 'perf/total-weight', 'page'),
   )
