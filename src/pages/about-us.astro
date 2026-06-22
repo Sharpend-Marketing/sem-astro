@@ -4,6 +4,7 @@ import SEMHero from '../components/sem/SEMHero.astro'
 import SEMTeamCard from '../components/sem/SEMTeamCard.astro'
 import SEMCTASection from '../components/sem/SEMCTASection.astro'
 import SEMSectionHeader from '../components/sem/SEMSectionHeader.astro'
+import { teamMembers } from '../lib/team'
 
 const qualifyingQuestions = [
   { question: 'Do you have excess capacity within your business?', answer: "Most clients are looking for leads, sales or similar. We want to make sure you can handle the influx of inquiries." },
@@ -12,18 +13,6 @@ const qualifyingQuestions = [
   { question: "We're looking for long-term relationships.", answer: "We do take on smaller jobs when it works for us, but our priority is to work with clients who see value in marketing and require ongoing services." },
 ]
 
-const team = [
-  {
-    name: 'Chris Ricard',
-    role: 'Serial Entrepreneur, Always Marketing Strategy First!',
-    bio: 'Chris brings experience building and operating ventures across web design, hosting, publishing, training, and entertainment. He has taught marketing at Douglas College since 2018 and pairs practical business experience with strategy-first thinking.',
-  },
-  {
-    name: 'Larry Toube',
-    role: 'Design Thinking, Crafting Ideas into Impactful Realities',
-    bio: 'Larry brings more than 20 years of experience shaping web, mobile, and social experiences. He combines creative direction, technology, and hands-on collaboration to build user-focused work that engages audiences and drives meaningful results.',
-  },
-]
 ---
 
 <SEMLayout
@@ -84,8 +73,14 @@ const team = [
     <div class="mx-auto max-w-7xl">
       <SEMSectionHeader label="Our Team" title="The Folks Behind the Brand" subtitle="Behind every successful project at Sharp End is a team bringing practical experience, creative thinking, and distinct perspectives to the table." />
       <div class="mt-12 grid gap-8 md:grid-cols-2 max-w-4xl mx-auto">
-        {team.map(member => (
-          <SEMTeamCard {...member} />
+        {teamMembers.map(member => (
+          <SEMTeamCard
+            name={member.name}
+            role={member.role}
+            bio={member.summary}
+            image={member.image}
+            href={`/team/${member.slug}`}
+          />
         ))}
       </div>
       <div class="mx-auto mt-12 max-w-3xl text-center">

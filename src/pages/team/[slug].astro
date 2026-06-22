@@ -1,0 +1,90 @@
+---
+import { Image } from 'astro:assets'
+import SEMLayout from '../../layouts/SEMLayout.astro'
+import SEMCTASection from '../../components/sem/SEMCTASection.astro'
+import { teamMembers, type TeamMember } from '../../lib/team'
+
+interface Props {
+  member: TeamMember
+}
+
+export function getStaticPaths() {
+  return teamMembers.map(member => ({
+    params: { slug: member.slug },
+    props: { member },
+  }))
+}
+
+const { member } = Astro.props
+---
+
+<SEMLayout
+  title={member.name}
+  description={member.metaDescription}
+  ogImage={member.image.src}
+>
+  <section class="bg-bg-light px-6 py-16 md:py-24">
+    <div class="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
+      <div class="overflow-hidden rounded-xl bg-white shadow-card">
+        <Image
+          src={member.image}
+          alt={`${member.name}, Sharp End Marketing`}
+          class="aspect-[4/5] h-full w-full object-cover object-top"
+          widths={[480, 720, 960]}
+          sizes="(min-width: 1024px) 50vw, calc(100vw - 48px)"
+        />
+      </div>
+      <div>
+        <a href="/about-us#team" class="section-label rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-solid">
+          Our Team
+        </a>
+        <h1 class="mt-5 font-accent text-h1 font-medium leading-tight text-heading md:text-hero">{member.name}</h1>
+        <p class="mt-4 text-lead font-medium text-teal-solid">{member.role}</p>
+        <p class="mt-6 text-body-lg leading-relaxed text-text-body">{member.introduction}</p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href={`mailto:${member.email}`} class="btn-sem inline-flex items-center gap-2 bg-teal-solid px-6 py-3 font-medium text-white transition-colors hover:bg-teal-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-solid">
+            Email {member.name.split(' ')[0]}
+          </a>
+          <a href={member.linkedIn} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-[0px_7px] border border-teal-solid px-6 py-3 font-medium text-teal-solid transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-solid">
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="px-6 py-20">
+    <div class="mx-auto max-w-5xl space-y-16">
+      <div class="grid gap-6 md:grid-cols-[1fr_2fr]">
+        <h2 class="font-accent text-h3 font-medium text-heading">About</h2>
+        <div class="space-y-5">
+          {member.about.map(paragraph => (
+            <p class="text-body-lg leading-relaxed text-text-body">{paragraph}</p>
+          ))}
+        </div>
+      </div>
+
+      <div class="border-t border-border pt-16">
+        <div class="grid gap-6 md:grid-cols-[1fr_2fr]">
+          <h2 class="font-accent text-h3 font-medium text-heading">Expertise</h2>
+          <div class="space-y-5">
+            {member.expertise.map(paragraph => (
+              <p class="text-body-lg leading-relaxed text-text-body">{paragraph}</p>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <p class="border-t border-border pt-8 text-sm text-text-body">
+        Learn more <a href="/about-us" class="font-medium text-teal-solid hover:underline">about Sharp End Marketing</a>, explore our <a href="/services" class="font-medium text-teal-solid hover:underline">services</a>, or read the latest ideas on our <a href="/blog" class="font-medium text-teal-solid hover:underline">blog</a>.
+      </p>
+    </div>
+  </section>
+
+  <SEMCTASection
+    title="Ready to Start a Conversation?"
+    description="Tell us where your business is headed and let's see if we're a good fit."
+    ctaText="Get in Touch"
+    ctaHref="/contact"
+  />
+</SEMLayout>

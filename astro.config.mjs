@@ -84,8 +84,6 @@ export default defineConfig({
     '/services/search-engine-optimization': { status: 301, destination: '/services/seo' },
     '/services/social-media-management': { status: 301, destination: '/services/social-media' },
     '/services/service-single': { status: 301, destination: '/services' },
-    '/team/chris-ricard': { status: 301, destination: '/about-us#team' },
-    '/team/larry-toube': { status: 301, destination: '/about-us#team' },
   },
   vite: {
     plugins: [tailwindcss()]
