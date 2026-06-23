@@ -181,7 +181,7 @@ const blogPosts = (await getCollection('blog', ({ data }) => !data.draft))
       />
       <div class="mt-12 grid gap-8 md:grid-cols-3">
         {caseStudies.map(study => (
-          <SEMCaseStudyCard {...study} />
+          <SEMCaseStudyCard {...study} layout="compact" />
         ))}
       </div>
     </div>
