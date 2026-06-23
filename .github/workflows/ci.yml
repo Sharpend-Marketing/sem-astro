@@ -4,6 +4,13 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,6 +27,5 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm build
-
-      - run: pnpm astro check
+      - name: Run full CI suite
+        run: pnpm build && pnpm astro check && npx tsx scripts/eval/validate-frontmatter.ts && npx tsx scripts/eval/brand-check.ts && npx tsx scripts/eval/a11y-check.ts && npx tsx scripts/eval/seo-check.ts && npx tsx scripts/eval/perf-check.ts && npx tsx scripts/eval/consistency-check.ts

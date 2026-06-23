@@ -160,6 +160,19 @@ Working fallback alias (useful during alias moves):
 
 - Project must be publicly reachable for Keystatic OAuth routes (`/api/keystatic/*`)
 - If Vercel Authentication / Deployment Protection is enabled for production, Keystatic OAuth can fail before the request reaches the app
+- Connect the Vercel project to `Sharpend-Marketing/sem-astro`
+- Set the production branch to `main`
+
+### Automated Release Flow
+
+1. Open a pull request into `main`.
+2. Apply the `automerge` label when the PR is approved for unattended release.
+3. GitHub queues a squash merge and waits for all required CI and preview checks.
+4. Vercel creates a preview deployment for the PR; Lighthouse and axe-core validate it.
+5. After every required check passes, GitHub merges the PR and deletes its branch.
+6. Vercel automatically deploys the merged `main` commit to production.
+
+Removing the `automerge` label cancels a queued automatic merge. PRs without the label always require a manual merge.
 
 ### Deploy
 
