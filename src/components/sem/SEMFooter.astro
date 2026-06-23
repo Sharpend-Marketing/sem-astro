@@ -18,20 +18,7 @@ const socialLinks = [
 const year = new Date().getFullYear()
 ---
 
-<footer class="relative mt-auto bg-teal-dark text-white">
-  <!-- Chevron overlay background -->
-  <div class="pointer-events-none absolute inset-0 overflow-hidden">
-    <svg class="absolute left-1/2 top-1/2 h-[200%] w-auto -translate-x-1/2 -translate-y-1/2 opacity-[0.06]" viewBox="0 0 300 400" fill="none">
-      <circle cx="150" cy="200" r="180" stroke="white" stroke-width="30"/>
-    </svg>
-    <svg class="absolute left-[40%] top-1/2 h-[160%] w-auto -translate-y-1/2 opacity-[0.08]" viewBox="0 0 200 400" fill="none">
-      <path d="M40 0L160 200L40 400" stroke="white" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <svg class="absolute left-[55%] top-1/2 h-[140%] w-auto -translate-y-1/2 opacity-[0.05]" viewBox="0 0 200 400" fill="none">
-      <path d="M40 0L160 200L40 400" stroke="white" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-
+<footer class="footer-brand-background relative mt-auto bg-teal-dark text-white">
   <div class="relative z-10 mx-auto max-w-7xl px-6 py-16 lg:py-20">
     <div class="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
       <!-- Logo -->
@@ -51,7 +38,7 @@ const year = new Date().getFullYear()
 
       <!-- Navigation - 3 column grid -->
       <div class="grid grid-cols-3 gap-x-16 gap-y-3">
-        {footerNav.map((link, i) => (
+        {footerNav.map(link => (
           <a
             href={link.href}
             class="rounded-sm text-sm text-white/70 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
@@ -95,3 +82,14 @@ const year = new Date().getFullYear()
     </div>
   </div>
 </footer>
+
+<style>
+  .footer-brand-background {
+    background-image:
+      url('/images/brand/footer-forward-pattern.svg'),
+      url('/images/brand/footer-circle-pattern.svg');
+    background-position: center, 0 0;
+    background-repeat: repeat, repeat;
+    background-size: cover, auto;
+  }
+</style>

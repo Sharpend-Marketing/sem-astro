@@ -10,25 +10,12 @@ interface Props {
   variant?: 'default' | 'stats'
 }
 
-const { title, description, ctaText, ctaHref, label = 'CONTACT US', variant = 'default' } = Astro.props
+const { title, description, ctaText, ctaHref, label = 'CONTACT US' } = Astro.props
 ---
 
 <section class="px-6 py-20">
   <div class="mx-auto max-w-7xl">
-    <div class="cta-card relative overflow-hidden rounded-[32px] bg-teal-solid px-8 py-16 md:px-16 md:py-20">
-      <!-- Chevron overlay pattern -->
-      <div class="pointer-events-none absolute inset-0 overflow-hidden">
-        <svg class="absolute -right-20 top-1/2 h-[140%] w-auto -translate-y-1/2 opacity-[0.08]" viewBox="0 0 200 400" fill="none">
-          <path d="M40 0L160 200L40 400" stroke="white" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <svg class="absolute right-20 top-1/2 h-[120%] w-auto -translate-y-1/2 opacity-[0.06]" viewBox="0 0 200 400" fill="none">
-          <path d="M40 0L160 200L40 400" stroke="white" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <svg class="absolute -left-32 top-1/2 h-[160%] w-auto -translate-y-1/2 opacity-[0.04]" viewBox="0 0 300 400" fill="none">
-          <circle cx="150" cy="200" r="180" stroke="white" stroke-width="30"/>
-        </svg>
-      </div>
-
+    <div class="cta-card relative overflow-hidden rounded-[32px] bg-teal px-8 py-16 md:px-16 md:py-20">
       <div class="relative z-10 grid items-center gap-12 md:grid-cols-2">
         <!-- Left: Content -->
         <div>
@@ -67,3 +54,12 @@ const { title, description, ctaText, ctaHref, label = 'CONTACT US', variant = 'd
     </div>
   </div>
 </section>
+
+<style>
+  .cta-card {
+    background-image: url('/images/brand/cta-pattern.svg');
+    background-position: center;
+    background-repeat: repeat;
+    background-size: contain;
+  }
+</style>
