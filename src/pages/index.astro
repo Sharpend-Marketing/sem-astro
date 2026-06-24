@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
+import { Image } from 'astro:assets'
 import SEMLayout from '../layouts/SEMLayout.astro'
 import SEMHero from '../components/sem/SEMHero.astro'
 import SEMSectionHeader from '../components/sem/SEMSectionHeader.astro'
@@ -11,13 +12,13 @@ import SEMCTASection from '../components/sem/SEMCTASection.astro'
 import { caseStudyImagePath, normalizeCaseStudyData, toCaseStudySlug } from '../lib/case-studies'
 
 const services = [
-  { number: '01', title: 'Digital Marketing', description: "A catch-all phrase, let's talk about specific tools to reach your goals.", href: '/services/digital-marketing' },
-  { number: '02', title: 'Social Media Marketing', description: 'Where your brand story comes alive and sparks engagement. Inspire and grow your digital community.', href: '/services/social-media' },
-  { number: '03', title: 'Paid Advertising', description: 'Stop guessing and start targeting - precision advertising.', href: '/services/paid-advertising' },
-  { number: '04', title: 'Creative Design', description: 'From concept to completion; websites, video, graphics and photography, we have you covered.', href: '/services/creative-design' },
-  { number: '05', title: 'AI Workflow Optimization', description: 'We design AI-powered applications that will streamline processes and systems. Saving time and money.', href: '/services/ai-workflow' },
-  { number: '06', title: 'SEO', description: 'Be found by those who matter most for organic growth - sustainable results.', href: '/services/seo' },
-  { number: '07', title: 'Brand Strategy', description: 'Plan smarter, not harder. Strategy is the bridge between dreams and results.', href: '/services/brand-strategy' },
+  { number: '01', title: 'Digital Marketing', description: "A catch-all phrase, let's talk about specific tools to reach your goals.", href: '/services/digital-marketing', icon: 'digital' as const },
+  { number: '02', title: 'Social Media Marketing', description: 'Where your brand story comes alive and sparks engagement. Inspire and grow your digital community.', href: '/services/social-media', icon: 'social' as const },
+  { number: '03', title: 'Paid Advertising', description: 'Stop guessing and start targeting - precision advertising.', href: '/services/paid-advertising', icon: 'paid' as const },
+  { number: '04', title: 'Creative Design', description: 'From concept to completion; websites, video, graphics and photography, we have you covered.', href: '/services/creative-design', icon: 'creative' as const },
+  { number: '05', title: 'AI Workflow Optimization', description: 'We design AI-powered applications that will streamline processes and systems. Saving time and money.', href: '/services/ai-workflow', icon: 'ai' as const },
+  { number: '06', title: 'SEO', description: 'Be found by those who matter most for organic growth - sustainable results.', href: '/services/seo', icon: 'seo' as const },
+  { number: '07', title: 'Brand Strategy', description: 'Plan smarter, not harder. Strategy is the bridge between dreams and results.', href: '/services/brand-strategy', icon: 'strategy' as const },
 ]
 
 const processSteps = [
@@ -98,18 +99,20 @@ const blogPosts = (await getCollection('blog', ({ data }) => !data.draft))
 
   <!-- Services -->
   <section class="px-6 py-20">
-    <div class="mx-auto max-w-7xl">
-      <SEMSectionHeader
-        label="OUR SERVICES"
-        icon="brush"
-        title="Digital Marketing & Social Media."
-      />
-      <p class="mx-auto mt-8 max-w-4xl text-center text-body-lg leading-relaxed text-text-body">
+    <div class="mx-auto grid max-w-7xl items-start gap-12 lg:grid-cols-5 lg:gap-16">
+      <div class="lg:sticky lg:top-28 lg:col-span-2">
+        <p class="section-label mb-5">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm3.388-1.62a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763" /></svg>
+          OUR SERVICES
+        </p>
+        <h2 class="font-accent text-h2 font-medium text-heading">Digital Marketing &amp; <span class="text-teal-accent">Social Media.</span></h2>
+        <p class="mt-6 text-body-lg leading-relaxed text-text-body">
         We provide a full suite of digital marketing & social media services. Complimenting our marketing menu is website design and content creation, these are foundational pieces that round out our creative service offerings. Well....let's not forget good storytelling, because without that, the rest doesn't really matter. We excel at building great storylines that will attract your ideal audience. Artificial Intelligence (AI) surrounds all of us today. At Sharp End Marketing we have embraced this revolution. Let us show your team how to harness the value of AI for specific tasks. Click on the numbered tiles for details or better yet, <a href="/contact" class="font-medium text-teal-solid hover:underline">reach out today</a> to see if your eligible for our no-obligation mini audit of your website and social media.
-      </p>
-      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        </p>
+      </div>
+      <div class="grid gap-6 sm:grid-cols-2 lg:col-span-3">
         {services.map(service => (
-          <SEMServiceCard {...service} />
+          <SEMServiceCard {...service} variant="showcase" />
         ))}
       </div>
     </div>
@@ -154,9 +157,11 @@ const blogPosts = (await getCollection('blog', ({ data }) => !data.draft))
       />
       <div class="mt-12 grid items-start gap-12 lg:grid-cols-2">
         <div class="overflow-hidden rounded-xl">
-          <img
+          <Image
             src="/images/process/our-process.png"
             alt="Sharp End Marketing process: Discover, Create, Analyze"
+            width={1124}
+            height={950}
             class="w-full h-auto rounded-xl"
             loading="lazy"
           />
