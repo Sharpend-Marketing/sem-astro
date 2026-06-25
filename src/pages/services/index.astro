@@ -1,18 +1,19 @@
 ---
 import SEMLayout from '../../layouts/SEMLayout.astro'
 import SEMSectionHeader from '../../components/sem/SEMSectionHeader.astro'
-import SEMServiceCard from '../../components/sem/SEMServiceCard.astro'
+import SEMServiceRow from '../../components/sem/SEMServiceRow.astro'
 import SEMProcessStep from '../../components/sem/SEMProcessStep.astro'
 import SEMCTASection from '../../components/sem/SEMCTASection.astro'
+import { Image } from 'astro:assets'
 
 const services = [
-  { number: '01', title: 'Brand Strategy', description: 'Plan smarter, not harder. Strategy is the bridge between dreams and results.', href: '/services/brand-strategy' },
-  { number: '02', title: 'Digital Marketing', description: "Digital solutions that drive real-world results. Let's us tailor a solution for you.", href: '/services/digital-marketing' },
-  { number: '03', title: 'SEO', description: 'Be found by those who matter most for organic growth - sustainable results.', href: '/services/seo' },
-  { number: '04', title: 'Social Media Marketing', description: 'Where your brand story comes alive and sparks engagement. Inspire and grow your digital community.', href: '/services/social-media' },
-  { number: '05', title: 'Paid Advertising', description: 'Stop guessing and start targeting - precision advertising.', href: '/services/paid-advertising' },
-  { number: '06', title: 'Creative Design', description: 'From concept to completion; websites, video, graphics and photography, we have you covered', href: '/services/creative-design' },
-  { number: '07', title: 'AI Workflow Optimization', description: 'We design AI-powered applications that will streamline processes and systems, saving you time and money.', href: '/services/ai-workflow' },
+  { title: 'Brand Strategy', description: 'Plan smarter, not harder. Strategy is the bridge between dreams and results.', href: '/services/brand-strategy', icon: 'strategy' as const, image: '/images/services/process-road.jpg', imageAlt: 'A winding road sign representing strategic direction' },
+  { title: 'Digital Marketing', description: "Digital solutions that drive real-world results. Let's tailor a solution for you.", href: '/services/digital-marketing', icon: 'digital' as const, image: '/images/blog/data-analytics.avif', imageAlt: 'Digital analytics displayed across connected screens' },
+  { title: 'SEO', description: 'Be found by those who matter most for organic growth - sustainable results.', href: '/services/seo', icon: 'seo' as const, image: '/images/blog/ai-seo.avif', imageAlt: 'Search optimization and AI technology concept' },
+  { title: 'Social Media Marketing', description: 'Where your brand story comes alive and sparks engagement. Inspire and grow your digital community.', href: '/services/social-media', icon: 'social' as const, image: '/images/blog/social-media-future.avif', imageAlt: 'Social media channels connecting a digital community' },
+  { title: 'Paid Advertising', description: 'Stop guessing and start targeting - precision advertising.', href: '/services/paid-advertising', icon: 'paid' as const, image: '/images/blog/facebook-pixel.jpg', imageAlt: 'Targeted advertising and campaign measurement concept' },
+  { title: 'Creative Design', description: 'From concept to completion; websites, video, graphics and photography, we have you covered.', href: '/services/creative-design', icon: 'creative' as const, image: '/images/services/jack-storms-art.png', imageAlt: 'Colorful glass artwork representing creative design' },
+  { title: 'AI Workflow Optimization', description: 'We design AI-powered applications that streamline processes and systems, saving you time and money.', href: '/services/ai-workflow', icon: 'ai' as const, image: '/images/blog/workflow-optimization.avif', imageAlt: 'Connected workflow automation and optimization concept' },
 ]
 
 const processSteps = [
@@ -36,7 +37,7 @@ const processSteps = [
         SHARPEN YOUR MARKETING SYSTEMS
       </p>
       <div class="grid items-center gap-12 md:grid-cols-2">
-        <div>
+        <div class="max-w-lg">
           <h1 class="font-accent text-h1 font-medium text-heading md:text-hero">Digital Marketing & Social Media Services</h1>
           <p class="mt-6 text-body-lg leading-relaxed text-text-body">
             Update your digital marketing & social media presence to align with your ideal prospect. Whether you want to generate more leads, make more sales or improve awareness with your target audience. Our services are designed to amplify your brand's presence, increase visibility and drive results.
@@ -45,18 +46,16 @@ const processSteps = [
             <a href="/contact" class="font-medium text-teal-solid hover:underline">Contact us today</a> to see if your eligible for our no-obligation mini audit of your website and social media.
           </p>
         </div>
-        <div class="relative">
-          <img
+        <div class="relative min-h-80 overflow-hidden rounded-xl md:min-h-96">
+          <Image
             src="/images/services/services-hero.jpg"
             alt="Digital marketing services"
-            class="w-full rounded-xl object-cover"
+            width={600}
+            height={400}
+            class="absolute inset-0 h-full w-full object-cover"
             loading="eager"
           />
-          <div class="absolute right-4 top-4 flex flex-col gap-3">
-            <span class="rounded-full bg-teal-solid px-4 py-2 text-sm font-medium text-white">Brand Strategy</span>
-            <span class="rounded-full bg-teal-solid px-4 py-2 text-sm font-medium text-white">Digital Marketing</span>
-            <span class="rounded-full bg-teal-solid px-4 py-2 text-sm font-medium text-white">Paid Advertising</span>
-          </div>
+          <Image src="/images/services/services-features.avif" alt="Brand strategy, digital marketing, and paid advertising" width={1422} height={486} class="absolute inset-0 h-full w-full object-contain" loading="eager" />
         </div>
       </div>
     </div>
@@ -71,9 +70,9 @@ const processSteps = [
         title="Our Offerings at SEM"
         subtitle="Explore our services below and discover how we can help you achieve your business goals."
       />
-      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div class="mt-12">
         {services.map(service => (
-          <SEMServiceCard {...service} />
+          <SEMServiceRow {...service} />
         ))}
       </div>
     </div>
@@ -90,9 +89,11 @@ const processSteps = [
       />
       <div class="mt-12 grid items-start gap-12 lg:grid-cols-2">
         <div class="overflow-hidden rounded-xl">
-          <img
+          <Image
             src="/images/services/process-road.jpg"
             alt="Our process - the road to success"
+            width={600}
+            height={600}
             class="w-full h-auto rounded-xl object-cover"
             loading="lazy"
           />
